@@ -58,3 +58,33 @@ abstract class BaseGameActivity : Activity() {
 
     fun Int.toPx(): Int = (this * resources.displayMetrics.density).toInt()
 }
+class MainActivity : BaseGameActivity() {
+
+    private val CARD_COUNT: Int = 9
+    internal lateinit var cards: Array<Card>
+
+    internal var firstFlippedIndex: Int  = -1
+    internal var secondFlippedIndex: Int = -1
+    internal var isChecking: Boolean     = false
+
+    internal lateinit var movesTextView:  TextView
+    internal lateinit var statusTextView: TextView
+    internal lateinit var gridLayout:     GridLayout
+
+    private val colorBack        = "#1A1A2E"
+    private val colorCard        = "#16213E"
+    internal val colorCardFlipped = "#E94560"
+    internal val colorCardMatched = "#0F3460"
+    private val colorAccent      = "#E94560"
+    private val colorText        = "#EAEAEA"
+    private val colorStar        = "#FFD700"
+
+    internal val cardViewMap = mutableMapOf<Int, FrameLayout>()
+    internal val cardTextMap = mutableMapOf<Int, TextView>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val ui = buildUI()
+        setContentView(ui)
+        resetGame()
+    }
