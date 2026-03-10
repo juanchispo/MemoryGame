@@ -88,3 +88,55 @@ class MainActivity : BaseGameActivity() {
         setContentView(ui)
         resetGame()
     }
+    override fun buildUI(): View {
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setBackgroundColor(Color.parseColor(colorBack))
+            gravity = Gravity.CENTER_HORIZONTAL
+            setPadding(24.toPx(), 48.toPx(), 24.toPx(), 24.toPx())
+        }
+
+        root.addView(TextView(this).apply {
+            text = "🧠 Memory Game"
+            textSize = 28f
+            setTextColor(Color.parseColor(colorText))
+            gravity = Gravity.CENTER
+            typeface = Typeface.DEFAULT_BOLD
+        }, wrapLp(bottom = 8.toPx()))
+
+        root.addView(TextView(this).apply {
+            text = "Encuentra los ${availableEmojis.size} pares"
+            textSize = 14f
+            setTextColor(Color.parseColor("#888888"))
+            gravity = Gravity.CENTER
+        }, wrapLp(bottom = 24.toPx()))
+
+        statusTextView = TextView(this).apply {
+            textSize = 20f
+            setTextColor(Color.parseColor(colorStar))
+            gravity = Gravity.CENTER
+            typeface = Typeface.DEFAULT_BOLD
+            visibility = View.GONE
+        }
+        root.addView(statusTextView, wrapLp(bottom = 12.toPx()))
+
+        movesTextView = TextView(this).apply {
+            text = "Movimientos: 0"
+            textSize = 18f
+            setTextColor(Color.parseColor(colorAccent))
+            gravity = Gravity.CENTER
+            typeface = Typeface.DEFAULT_BOLD
+        }
+        root.addView(movesTextView, wrapLp(bottom = 28.toPx()))
+
+        gridLayout = GridLayout(this).apply {
+            rowCount    = 3
+            columnCount = 3
+        }
+        root.addView(gridLayout, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).also {
+            it.gravity      = Gravity.CENTER_HORIZONTAL
+            it.bottomMargin = 32.toPx()
+        })
