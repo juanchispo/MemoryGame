@@ -140,3 +140,47 @@ class MainActivity : BaseGameActivity() {
             it.gravity      = Gravity.CENTER_HORIZONTAL
             it.bottomMargin = 32.toPx()
         })
+        root.addView(Button(this).apply {
+            text = "🔄  Reiniciar"
+            textSize = 16f
+            setTextColor(Color.WHITE)
+            setBackgroundColor(Color.parseColor(colorAccent))
+            setPadding(48.toPx(), 20.toPx(), 48.toPx(), 20.toPx())
+            isAllCaps = false
+            setOnClickListener { resetGame() }
+        }, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).also { it.gravity = Gravity.CENTER_HORIZONTAL })
+
+        return root
+    }
+
+    override fun onGameWon() {
+        statusTextView.text = "🎉 ¡Ganaste en $moves movimientos!"
+        statusTextView.visibility = View.VISIBLE
+        val sx = ObjectAnimator.ofFloat(statusTextView, "scaleX", 0f, 1.2f, 1f).apply { duration = 500 }
+        val sy = ObjectAnimator.ofFloat(statusTextView, "scaleY", 0f, 1.2f, 1f).apply { duration = 500 }
+        AnimatorSet().apply { playTogether(sx, sy); start() }
+    }
+
+    override fun resetCounters() {
+        super.resetCounters()
+        firstFlippedIndex  = -1
+        secondFlippedIndex = -1
+        isChecking         = false
+    }
+
+    internal fun roundedBg(color: Int): GradientDrawable =
+        GradientDrawable().apply {
+            shape        = GradientDrawable.RECTANGLE
+            cornerRadius = 12.toPx().toFloat()
+            setColor(color)
+        }
+
+    private fun wrapLp(bottom: Int = 0): LinearLayout.LayoutParams =
+        LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).also { it.bottomMargin = bottom }
+}
