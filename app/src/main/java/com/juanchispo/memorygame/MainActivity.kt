@@ -250,5 +250,48 @@ fun MainActivity.buildGrid() {
     }
 }
 
+fun MainActivity.onCardClick(index: Int) {
+    if (isChecking) return
+    if (!cards[index].isClickable()) return
+
+    flipCard(index, reveal = true)
+    cards[index].state = CardState.FLIPPED
+
+    if (firstFlippedIndex == -1) {
+        firstFlippedIndex = index
+    } else {
+        secondFlippedIndex = index
+        moves++
+        movesTextView.text = "Movimientos: $moves"
+        isChecking = true
+        checkMatch()
+    }
+}
+
+fun MainActivity.checkMatch() {
+    val a = firstFlippedIndex
+    val b = secondFlippedIndex
+
+    if (cards[a].emoji == cards[b].emoji) {
+        matchesFound++
+        cards[a].state = CardState.MATCHED
+        cards[b].state = CardState.MATCHED
+
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+            cardViewMap[a]?.background = roundedBg(android.graphics.Color.parseColor(colorCardMatched))
+            cardViewMap[b]?.background = roundedBg(android.graphics.Color.parseColor(colorCardMatched))
+            resetCounters()
+            if (matchesFound == availableEmojis.size) onGameWon()
+        }, 400)
+    } else {
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+            flipCard(a, false); flipCard(b, false)
+            cards[a].state = CardState.HIDDEN
+            cards[b].state = CardState.HIDDEN
+            resetCounters()
+        }, 900)
+    }
+}
+
 
 
