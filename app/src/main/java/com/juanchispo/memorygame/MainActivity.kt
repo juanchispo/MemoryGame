@@ -198,5 +198,57 @@ fun MainActivity.resetGame() {
     buildGrid()
 }
 
+fun MainActivity.buildGrid() {
+    gridLayout.removeAllViews()
+    cardViewMap.clear()
+    cardTextMap.clear()
+
+    val size   = 90.toPx()
+    val margin = 6.toPx()
+
+    for (i in 0 until 9) {
+        val card = cards[i]
+
+        val bgColor = when (card.state) {
+            CardState.MATCHED -> android.graphics.Color.parseColor("#FFD700")
+            CardState.FLIPPED -> android.graphics.Color.parseColor(colorCardFlipped)
+            CardState.HIDDEN  -> android.graphics.Color.parseColor("#16213E")
+        }
+
+        val cardView = android.widget.FrameLayout(this).apply {
+            background = roundedBg(bgColor)
+        }
+
+        val textView = android.widget.TextView(this).apply {
+            text     = card.display()
+            textSize = if (i == 4) 34f else 30f
+            gravity  = android.view.Gravity.CENTER
+            setTextColor(android.graphics.Color.WHITE)
+        }
+
+        cardView.addView(textView, android.widget.FrameLayout.LayoutParams(
+            android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+            android.widget.FrameLayout.LayoutParams.MATCH_PARENT
+        ))
+
+        val params = android.widget.GridLayout.LayoutParams().apply {
+            width = size; height = size
+            setMargins(margin, margin, margin, margin)
+            rowSpec    = android.widget.GridLayout.spec(i / 3)
+            columnSpec = android.widget.GridLayout.spec(i % 3)
+        }
+
+        cardViewMap[i] = cardView
+        cardTextMap[i] = textView
+
+        if (card.isClickable()) {
+            val idx = i
+            cardView.setOnClickListener { onCardClick(idx) }
+        }
+
+        gridLayout.addView(cardView, params)
+    }
+}
+
 
 
