@@ -14,12 +14,6 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.*
 
-// ╔══════════════════════════════════════════╗
-//        PARTE 1 — MODELOS DE DATOS
-//   Responsable: definir Card, CardState
-//   y la clase base BaseGameActivity
-// ╚══════════════════════════════════════════╝
-
 enum class CardState {
     HIDDEN,
     FLIPPED,
@@ -184,3 +178,25 @@ class MainActivity : BaseGameActivity() {
             LinearLayout.LayoutParams.WRAP_CONTENT
         ).also { it.bottomMargin = bottom }
 }
+
+fun MainActivity.resetGame() {
+    resetCounters()
+    movesTextView.text = "Movimientos: 0"
+    statusTextView.visibility = android.view.View.GONE
+
+    val shuffled: List<String> = emojiPairs.shuffled()
+
+    cards = Array(9) { i ->
+        when (i) {
+            4    -> Card(id = i, emoji = "⭐", state = CardState.MATCHED)
+            else -> {
+                val emojiIndex = if (i < 4) i else i - 1
+                Card(id = i, emoji = shuffled[emojiIndex], state = CardState.HIDDEN)
+            }
+        }
+    }
+    buildGrid()
+}
+
+
+
