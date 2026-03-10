@@ -1,47 +1,60 @@
 package com.juanchispo.memorygame
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.app.Activity
+import android.graphics.Color
+import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.juanchispo.memorygame.ui.theme.MemoryGameTheme
+import android.os.Handler
+import android.os.Looper
+import android.view.Gravity
+import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.*
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            MemoryGameTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
+// ╔══════════════════════════════════════════╗
+//        PARTE 1 — MODELOS DE DATOS
+//   Responsable: definir Card, CardState
+//   y la clase base BaseGameActivity
+// ╚══════════════════════════════════════════╝
+
+enum class CardState {
+    HIDDEN,
+    FLIPPED,
+    MATCHED
+}
+
+data class Card(
+    val id: Int,
+    val emoji: String,
+    var state: CardState
+) {
+    fun isClickable(): Boolean = state == CardState.HIDDEN
+
+    fun display(): String = when (state) {
+        CardState.HIDDEN  -> "\uD83D\uDC40"
+        CardState.FLIPPED -> emoji
+        CardState.MATCHED -> emoji
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name! camilo suave",
-        modifier = modifier
-    )
-}
+abstract class BaseGameActivity : Activity() {
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MemoryGameTheme {
-        Greeting("Android")
+    protected var moves: Int = 0
+    protected var matchesFound: Int = 0
+
+    protected val availableEmojis: List<String> = listOf("🍎", "🐶", "🎸", "🚀")
+    protected val emojiPairs: MutableList<String> = (availableEmojis + availableEmojis).toMutableList()
+
+    abstract fun buildUI(): View
+    abstract fun onGameWon()
+
+    open fun resetCounters() {
+        moves = 0
+        matchesFound = 0
     }
+
+    fun Int.toPx(): Int = (this * resources.displayMetrics.density).toInt()
 }
