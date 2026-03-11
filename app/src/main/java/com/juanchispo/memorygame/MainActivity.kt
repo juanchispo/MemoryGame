@@ -63,7 +63,7 @@ class MainActivity : Activity() {
         }, lpWrap(bottomMargin = dp(8)))
 
         root.addView(TextView(this).apply {
-            text = "Encuentra los 4 pares"
+            text = "Find the 4 pairs"
             textSize = 14f
             setTextColor(Color.parseColor("#888888"))
             gravity = Gravity.CENTER
@@ -80,7 +80,7 @@ class MainActivity : Activity() {
         root.addView(statusTextView, lpWrap(bottomMargin = dp(12)))
 
         movesTextView = TextView(this).apply {
-            text = "Movimientos: 0"
+            text = "Movements: 0"
             textSize = 18f
             setTextColor(Color.parseColor(colorAccent))
             gravity = Gravity.CENTER
@@ -101,7 +101,7 @@ class MainActivity : Activity() {
         })
 
         root.addView(Button(this).apply {
-            text = "Reiniciar"
+            text = "Restart"
             textSize = 16f
             setTextColor(Color.WHITE)
             setBackgroundColor(Color.parseColor(colorAccent))
@@ -130,7 +130,7 @@ class MainActivity : Activity() {
         moves = 0; matchesFound = 0
         firstFlippedIndex = -1; secondFlippedIndex = -1
         isChecking = false
-        movesTextView.text = "Movimientos: 0"
+        movesTextView.text = "Movements: 0"
         statusTextView.visibility = View.GONE
 
         val shuffled = PAIR_EMOJIS.shuffled()
@@ -195,7 +195,7 @@ class MainActivity : Activity() {
         } else {
             secondFlippedIndex = index
             moves++
-            movesTextView.text = "Movimientos: $moves"
+            movesTextView.text = "Movements: $moves"
             isChecking = true
             checkMatch()
         }
@@ -248,7 +248,7 @@ class MainActivity : Activity() {
         out.start()
     }
     private fun showVictory() {
-        statusTextView.text = "🎉 ¡Ganaste en $moves movimientos!"
+        statusTextView.text = "You win in $moves movements"
         statusTextView.visibility = View.VISIBLE
         val sx = ObjectAnimator.ofFloat(statusTextView, "scaleX", 0f, 1.2f, 1f).apply { duration = 500 }
         val sy = ObjectAnimator.ofFloat(statusTextView, "scaleY", 0f, 1.2f, 1f).apply { duration = 500 }
